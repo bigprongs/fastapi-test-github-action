@@ -6,8 +6,11 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from app.main import app
 from app.database import Base, get_db
 from app.config import Settings
+import os
 
-test_settings = Settings(_env_file=".env.test")
+
+is_ci = os.getenv("GITHUB_ACTIONS") == "true"
+test_settings = Settings(_env_file=None if is_ci else ".env.test")
 DATABASE_URL_TEST = test_settings.db_url
 
 # 🔄 Do NOT use shared engine/session outside of test scope
